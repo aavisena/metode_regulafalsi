@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 
-st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
+st.set_page_config(page_title="Web Regula Falsi Sena", layout="wide", page_icon="⚡")
 
 st.markdown(
     """
@@ -42,7 +42,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 st.markdown("<div class='title'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Fikri Zaki Avisena Design</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Fikri Zaki Avisena Present</div>", unsafe_allow_html=True)
 
 
 st.write("---")
