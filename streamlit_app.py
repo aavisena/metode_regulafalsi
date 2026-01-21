@@ -175,7 +175,7 @@ with colR1:
 
     st.markdown("</div>", unsafe_allow_html=True)
     
-if data:
+if len(data) > 0:
     df = pd.DataFrame(
         data, 
         columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
