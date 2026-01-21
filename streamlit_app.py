@@ -1,5 +1,9 @@
 import streamlit as st
+import sympy as sp
 import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
 
