@@ -39,7 +39,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("<div class='title'>Web Metode Regula Falsi by SENA</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Web Metode Regula Falsi</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Fikri Zaki Avisena Present</div>", unsafe_allow_html=True)
 
 
