@@ -181,6 +181,8 @@ if data:
         columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
     )
     st.dataframe(df, use_container_width=True)
+else:
+    st.warning("Data iterasi kosong.:)
     
     with colR1:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
