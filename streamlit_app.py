@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
 
@@ -176,7 +177,7 @@ with colR1:
     st.markdown("</div>", unsafe_allow_html=True)
     
 if len(data) > 0:
-    df = pd.dataframe(
+    df = pd.DataFrame(
         data, 
         columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
     )
