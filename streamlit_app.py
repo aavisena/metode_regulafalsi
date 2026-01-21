@@ -1,9 +1,16 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import math
 
+# ================== PAGE CONFIG ==================
+st.set_page_config(
+    page_title="Regula Falsi Calculator",
+    layout="wide",
+    page_icon="⚡"
+)
 
-st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
-
+# ================== STYLE ==================
 st.markdown(
     """
     <style>
@@ -33,115 +40,72 @@ st.markdown(
             font-size: 20px;
         }
         .footer {
-        margin-top: 30px;
-        text-align: center;
-        color: #7b8794;
+            margin-top: 30px;
+            text-align: center;
+            color: #7b8794;
         }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+# ================== HEADER ==================
 st.markdown("<div class='title'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>Fikri Zaki Avisena Design</div>", unsafe_allow_html=True)
-
-
 st.write("---")
 
+# ================== INPUT & INFO ==================
 col1, col2 = st.columns([1.2, 1])
 
 with col1:
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("### 🔧 Input Parameter")
 
-
     fungsi = st.text_input("Masukkan Fungsi f(x):", "x**3 - x - 2")
     a = st.number_input("Batas bawah (a):", value=1.0)
     b = st.number_input("Batas atas (b):", value=2.0)
-    toleransi = st.number_input("Toleransi error:", value=0.0001)
-
+    toleransi = st.number_input("Toleransi error:", value=0.0001, format="%.6f")
 
     hitung = st.button("🔍 Hitung Akar", use_container_width=True)
-
-
     st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
     st.markdown("<div class='card'>", unsafe_allow_html=True)
     st.markdown("### ℹ️ Informasi Metode")
     st.write(
-        "Metode *Regula Falsi* (False Position) menggunakan garis sekant untuk memperkirakan akar persamaan f(x)."
+        "Metode *Regula Falsi* menggunakan garis sekant untuk memperkirakan akar persamaan non-linear."
     )
     st.write("""
     **Kelebihan:**
-    - Lebih stabil dibanding metode sekant
-    - Tidak memerlukan turunan f(x)
-
+    - Stabil
+    - Tidak membutuhkan turunan
 
     **Kekurangan:**
-    - Lebih lambat dibanding Newton-Raphson
-    - Bisa stagnan pada beberapa kasus
+    - Konvergensi relatif lambat
     """)
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
+# ================== FUNCTION ==================
 def f(x):
-    return eval(fungsi)
+    return eval(fungsi, {"x": x, "math": math})
 
-if hitung:
-    st.write("---")
-
-
-    colR1, colR2 = st.columns([1.2, 1])
-
-
-    iterasi = 0
-    data = []
-
-
-    while True:
-        fa = f(a)
-        fb = f(b)
-        c = b - (fb * (b - a)) / (fb - fa)
-        fc = f(c)
-        
-        data.append([iterasi, a, b, c, fa, fb, fc])
-
-        if abs(fc) < toleransi:
-            akar = c
-            break
-            
-        if fa * fc < 0:
-            b = c
-        else:
-            a = c
-            
-        iterasi += 1
-        if iterasi > 100:
-            akar = None
-            break
-
-colR1, colR2 = st.columns(2)
-
+# ================== CALCULATION ==================
 akar = None
 data = []
 
-if hitung:  
-    
+if hitung:
     a_local = a
     b_local = b
-
     iterasi = 0
-    data = []
-    
+
     while True:
         fa = f(a_local)
         fb = f(b_local)
 
-        denom = (fb - fa)
-        if denom == 0:
-            akar = None
+        if fb - fa == 0:
             break
 
-        c = b_local - fb * (b_local - a_local) / denom
+        c = b_local - fb * (b_local - a_local) / (fb - fa)
         fc = f(c)
 
         data.append([iterasi, a_local, b_local, c, fa, fb, fc])
@@ -157,8 +121,10 @@ if hitung:
 
         iterasi += 1
         if iterasi > 100:
-            akar = None
             break
+
+# ================== RESULT ==================
+colR1, colR2 = st.columns([1.2, 1])
 
 with colR1:
     st.markdown("<div class='card'>", unsafe_allow_html=True)
@@ -171,44 +137,37 @@ with colR1:
         )
     else:
         if hitung:
-            st.error("Akar tidak ditemukan dalam 100 iterasi atau interval tidak valid.")
+            st.error("Akar tidak ditemukan atau interval tidak valid.")
         else:
-            st.info("Tekan tombol 'Hitung Akar' untuk memulai perhitungan.")
+            st.info("Tekan tombol **Hitung Akar** untuk memulai.")
 
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
+# ================== TABLE & GRAPH ==================
 if len(data) > 0:
     df = pd.DataFrame(
-        data, 
+        data,
         columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
     )
-    st.dataframe(df, use_container_width=True)
-    
+
     with colR1:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("### 📊 Tabel Iterasi")
         st.dataframe(df, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-       
+
     with colR2:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
         st.markdown("### 📈 Grafik Konvergensi Akar")
-        
+
         fig, ax = plt.subplots()
         ax.plot(df["Iterasi"], df["c"], marker="o")
         ax.set_xlabel("Iterasi")
-        ax.set_ylabel("Nilai c (perkiraan akar)")
-        ax.set_title("Grafik Konvergensi Metode Regula Falsi")
-        st.pyplot(fig, clear_figure=True)
-        
+        ax.set_ylabel("Nilai c")
+        ax.set_title("Konvergensi Metode Regula Falsi")
+
+        st.pyplot(fig)
         st.markdown("</div>", unsafe_allow_html=True)
 
-else:
-    with colR1:
-        st.info("Tabel iterasi akan muncul setelah perhitungan selesai.")
-    with colR2:
-        st.info("Grafik konvergensi akan muncul setelah perhitungan selesai.")
-
+# ================== FOOTER ==================
 st.markdown("<div class='footer'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
-
-# --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
