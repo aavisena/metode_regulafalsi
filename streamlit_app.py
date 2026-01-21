@@ -1,117 +1,214 @@
-<?php
-// ===============================
-// METODE REGULA FALSI
-// ===============================
+import streamlit as st
+import pandas as pd
 
-// Fungsi nonlinear
-function f($x) {
-    return pow($x, 3) - 4*$x - 9; // f(x) = x^3 - 4x - 9
-}
 
-$hasil = [];
+st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
 
-if (isset($_POST['hitung'])) {
-    $a = floatval($_POST['a']);
-    $b = floatval($_POST['b']);
-    $toleransi = floatval($_POST['toleransi']);
-    $maksIterasi = intval($_POST['iterasi']);
-
-    if (f($a) * f($b) >= 0) {
-        $error = "f(a) dan f(b) harus memiliki tanda berbeda!";
-    } else {
-        for ($i = 1; $i <= $maksIterasi; $i++) {
-            $fa = f($a);
-            $fb = f($b);
-
-            $xr = ($a * $fb - $b * $fa) / ($fb - $fa);
-            $fxr = f($xr);
-
-            $hasil[] = [
-                'iterasi' => $i,
-                'a' => $a,
-                'b' => $b,
-                'xr' => $xr,
-                'fxr' => $fxr
-            ];
-
-            if (abs($fxr) < $toleransi) {
-                break;
-            }
-
-            if ($fa * $fxr < 0) {
-                $b = $xr;
-            } else {
-                $a = $xr;
-            }
-        }
-    }
-}
-?>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Metode Regula Falsi</title>
+st.markdown(
+    """
     <style>
-        body { font-family: Arial; background: #f2f2f2; }
-        .container { width: 750px; margin: auto; background: #fff; padding: 20px; }
-        input, button { padding: 8px; width: 100%; margin: 5px 0; }
-        button { background: #007bff; color: #fff; border: none; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background: #eee; }
-        .error { color: red; margin-top: 10px; }
+        body { background-color: #f5f7fa; }
+        .title {
+            text-align: center;
+            font-size: 42px;
+            color: #2b5876;
+            font-weight: bold;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            color: #4a6572;
+        }
+        .card {
+            padding: 20px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.08);
+        }
+        .result {
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            font-size: 20px;
+        }
+        .footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #7b8794;
+        }
     </style>
-</head>
-<body>
+    """,
+    unsafe_allow_html=True
+)
+st.markdown("<div class='title'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Fikri Zaki Avisena Design</div>", unsafe_allow_html=True)
 
-<div class="container">
-    <h2>Aplikasi Web Metode Regula Falsi</h2>
-    <p><b>Fungsi:</b> f(x) = x³ − 4x − 9</p>
 
-    <form method="POST">
-        <label>Batas bawah (a)</label>
-        <input type="number" step="any" name="a" required>
+st.write("---")
 
-        <label>Batas atas (b)</label>
-        <input type="number" step="any" name="b" required>
+col1, col2 = st.columns([1.2, 1])
 
-        <label>Toleransi error</label>
-        <input type="number" step="any" name="toleransi" value="0.0001" required>
+with col1:
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("### 🔧 Input Parameter")
 
-        <label>Maksimum iterasi</label>
-        <input type="number" name="iterasi" value="20" required>
 
-        <button type="submit" name="hitung">Hitung</button>
-    </form>
+    fungsi = st.text_input("Masukkan Fungsi f(x):", "x**3 - x - 2")
+    a = st.number_input("Batas bawah (a):", value=1.0)
+    b = st.number_input("Batas atas (b):", value=2.0)
+    toleransi = st.number_input("Toleransi error:", value=0.0001)
 
-    <?php if (isset($error)) : ?>
-        <div class="error"><?= $error ?></div>
-    <?php endif; ?>
 
-    <?php if (!empty($hasil)) : ?>
-        <table>
-            <tr>
-                <th>Iterasi</th>
-                <th>a</th>
-                <th>b</th>
-                <th>xr</th>
-                <th>f(xr)</th>
-            </tr>
-            <?php foreach ($hasil as $h) : ?>
-            <tr>
-                <td><?= $h['iterasi'] ?></td>
-                <td><?= round($h['a'], 6) ?></td>
-                <td><?= round($h['b'], 6) ?></td>
-                <td><?= round($h['xr'], 6) ?></td>
-                <td><?= round($h['fxr'], 6) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
+    hitung = st.button("🔍 Hitung Akar", use_container_width=True)
 
-        <p><b>Akar hampiran ≈ <?= round(end($hasil)['xr'], 6) ?></b></p>
-    <?php endif; ?>
-</div>
 
-</body>
-</html>
+    st.markdown("</div>", unsafe_allow_html=True)
+
+with col2:
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("### ℹ️ Informasi Metode")
+    st.write(
+        "Metode *Regula Falsi* (False Position) menggunakan garis sekant untuk memperkirakan akar persamaan f(x)."
+    )
+    st.write("""
+    **Kelebihan:**
+    - Lebih stabil dibanding metode sekant
+    - Tidak memerlukan turunan f(x)
+
+
+    **Kekurangan:**
+    - Lebih lambat dibanding Newton-Raphson
+    - Bisa stagnan pada beberapa kasus
+    """)
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+def f(x):
+    return eval(fungsi)
+
+if hitung:
+    st.write("---")
+
+
+    colR1, colR2 = st.columns([1.2, 1])
+
+
+    iterasi = 0
+    data = []
+
+
+    while True:
+        fa = f(a)
+        fb = f(b)
+        c = b - (fb * (b - a)) / (fb - fa)
+        fc = f(c)
+        
+        data.append([iterasi, a, b, c, fa, fb, fc])
+
+        if abs(fc) < toleransi:
+            akar = c
+            break
+            
+        if fa * fc < 0:
+            b = c
+        else:
+            a = c
+            
+        iterasi += 1
+        if iterasi > 100:
+            akar = None
+            break
+
+colR1, colR2 = st.columns(2)
+
+akar = None
+data = []
+
+if hitung:  
+    
+    a_local = a
+    b_local = b
+
+    iterasi = 0
+    data = []
+    
+    while True:
+        fa = f(a_local)
+        fb = f(b_local)
+
+        denom = (fb - fa)
+        if denom == 0:
+            akar = None
+            break
+
+        c = b_local - fb * (b_local - a_local) / denom
+        fc = f(c)
+
+        data.append([iterasi, a_local, b_local, c, fa, fb, fc])
+
+        if abs(fc) < toleransi:
+            akar = c
+            break
+
+        if fa * fc < 0:
+            b_local = c
+        else:
+            a_local = c
+
+        iterasi += 1
+        if iterasi > 100:
+            akar = None
+            break
+
+with colR1:
+    st.markdown("<div class='card'>", unsafe_allow_html=True)
+    st.markdown("### ✅ Hasil Perhitungan")
+
+    if akar is not None:
+        st.markdown(
+            f"<div class='result'>Akar ditemukan pada:<br><b>{akar}</b></div>",
+            unsafe_allow_html=True
+        )
+    else:
+        if hitung:
+            st.error("Akar tidak ditemukan dalam 100 iterasi atau interval tidak valid.")
+        else:
+            st.info("Tekan tombol 'Hitung Akar' untuk memulai perhitungan.")
+
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+if len(data) > 0:
+    df = pd.DataFrame(
+        data, 
+        columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
+    )
+    st.dataframe(df, use_container_width=True)
+    
+    with colR1:
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown("### 📊 Tabel Iterasi")
+        st.dataframe(df, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+       
+    with colR2:
+        st.markdown("<div class='card'>", unsafe_allow_html=True)
+        st.markdown("### 📈 Grafik Konvergensi Akar")
+        
+        fig, ax = plt.subplots()
+        ax.plot(df["Iterasi"], df["c"], marker="o")
+        ax.set_xlabel("Iterasi")
+        ax.set_ylabel("Nilai c (perkiraan akar)")
+        ax.set_title("Grafik Konvergensi Metode Regula Falsi")
+        st.pyplot(fig, clear_figure=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+
+else:
+    with colR1:
+        st.info("Tabel iterasi akan muncul setelah perhitungan selesai.")
+    with colR2:
+        st.info("Grafik konvergensi akan muncul setelah perhitungan selesai.")
+
+st.markdown("<div class='footer'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
+
+# --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
