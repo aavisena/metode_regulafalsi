@@ -39,8 +39,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("<div class='title'>⚡ Metode Regula Falsi – Root Finder App</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Aplikasi profesional untuk mencari akar persamaan non-linear</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Web Metode Regula Falsi by SENA</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Fikri Zaki Avisena Present</div>", unsafe_allow_html=True)
 
 
 st.write("---")
@@ -206,6 +206,6 @@ else:
     with colR2:
         st.info("Grafik konvergensi akan muncul setelah perhitungan selesai.")
 
-st.markdown("<div class='footer'>Dibuat dengan ❤ menggunakan Streamlit • Regula Falsi Professional Edition</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Jangan Lupa Follow IG: aavisena_ https://www.instagram.com/aavisena_/</div>", unsafe_allow_html=True)
 
 # --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
