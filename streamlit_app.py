@@ -1,71 +1,117 @@
 <?php
+// ===============================
+// METODE REGULA FALSI
+// ===============================
+
+// Fungsi nonlinear
 function f($x) {
-    return pow($x, 3) - 4*$x - 9;
+    return pow($x, 3) - 4*$x - 9; // f(x) = x^3 - 4x - 9
 }
 
-$result = [];
+$hasil = [];
+
 if (isset($_POST['hitung'])) {
     $a = floatval($_POST['a']);
     $b = floatval($_POST['b']);
-    $tol = floatval($_POST['toleransi']);
-    $maxIter = intval($_POST['iterasi']);
+    $toleransi = floatval($_POST['toleransi']);
+    $maksIterasi = intval($_POST['iterasi']);
 
     if (f($a) * f($b) >= 0) {
-        $error = "Nilai f(a) dan f(b) harus berlainan tanda!";
+        $error = "f(a) dan f(b) harus memiliki tanda berbeda!";
     } else {
-        for ($i = 1; $i <= $maxIter; $i++) {
+        for ($i = 1; $i <= $maksIterasi; $i++) {
             $fa = f($a);
             $fb = f($b);
+
             $xr = ($a * $fb - $b * $fa) / ($fb - $fa);
             $fxr = f($xr);
 
-            $result[] = [$i, $a, $b, $xr, $fxr];
+            $hasil[] = [
+                'iterasi' => $i,
+                'a' => $a,
+                'b' => $b,
+                'xr' => $xr,
+                'fxr' => $fxr
+            ];
 
-            if (abs($fxr) < $tol) break;
-            if ($fa * $fxr < 0) $b = $xr;
-            else $a = $xr;
+            if (abs($fxr) < $toleransi) {
+                break;
+            }
+
+            if ($fa * $fxr < 0) {
+                $b = $xr;
+            } else {
+                $a = $xr;
+            }
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>Regula Falsi Web</title>
-<style>
-body{font-family:Arial;background:#f4f4f4}
-.container{width:700px;margin:auto;background:#fff;padding:20px}
-table{width:100%;border-collapse:collapse;margin-top:20px}
-th,td{border:1px solid #ccc;padding:8px;text-align:center}
-th{background:#eee}
-</style>
+    <title>Metode Regula Falsi</title>
+    <style>
+        body { font-family: Arial; background: #f2f2f2; }
+        .container { width: 750px; margin: auto; background: #fff; padding: 20px; }
+        input, button { padding: 8px; width: 100%; margin: 5px 0; }
+        button { background: #007bff; color: #fff; border: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #eee; }
+        .error { color: red; margin-top: 10px; }
+    </style>
 </head>
 <body>
-<div class="container">
-<h2>Metode Regula Falsi</h2>
-<form method="POST">
-<input type="number" step="any" name="a" placeholder="Batas bawah a" required>
-<input type="number" step="any" name="b" placeholder="Batas atas b" required>
-<input type="number" step="any" name="toleransi" value="0.0001" required>
-<input type="number" name="iterasi" value="20" required>
-<button name="hitung">Hitung</button>
-</form>
 
-<?php if (!empty($result)) { ?>
-<table>
-<tr><th>i</th><th>a</th><th>b</th><th>xr</th><th>f(xr)</th></tr>
-<?php foreach ($result as $r) { ?>
-<tr>
-<td><?= $r[0] ?></td>
-<td><?= round($r[1],6) ?></td>
-<td><?= round($r[2],6) ?></td>
-<td><?= round($r[3],6) ?></td>
-<td><?= round($r[4],6) ?></td>
-</tr>
-<?php } ?>
-</table>
-<p><b>Akar ≈ <?= round(end($result)[3],6) ?></b></p>
-<?php } ?>
+<div class="container">
+    <h2>Aplikasi Web Metode Regula Falsi</h2>
+    <p><b>Fungsi:</b> f(x) = x³ − 4x − 9</p>
+
+    <form method="POST">
+        <label>Batas bawah (a)</label>
+        <input type="number" step="any" name="a" required>
+
+        <label>Batas atas (b)</label>
+        <input type="number" step="any" name="b" required>
+
+        <label>Toleransi error</label>
+        <input type="number" step="any" name="toleransi" value="0.0001" required>
+
+        <label>Maksimum iterasi</label>
+        <input type="number" name="iterasi" value="20" required>
+
+        <button type="submit" name="hitung">Hitung</button>
+    </form>
+
+    <?php if (isset($error)) : ?>
+        <div class="error"><?= $error ?></div>
+    <?php endif; ?>
+
+    <?php if (!empty($hasil)) : ?>
+        <table>
+            <tr>
+                <th>Iterasi</th>
+                <th>a</th>
+                <th>b</th>
+                <th>xr</th>
+                <th>f(xr)</th>
+            </tr>
+            <?php foreach ($hasil as $h) : ?>
+            <tr>
+                <td><?= $h['iterasi'] ?></td>
+                <td><?= round($h['a'], 6) ?></td>
+                <td><?= round($h['b'], 6) ?></td>
+                <td><?= round($h['xr'], 6) ?></td>
+                <td><?= round($h['fxr'], 6) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <p><b>Akar hampiran ≈ <?= round(end($hasil)['xr'], 6) ?></b></p>
+    <?php endif; ?>
 </div>
+
 </body>
 </html>
