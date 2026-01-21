@@ -1,8 +1,6 @@
 import streamlit as st
-import pandas as pd
 
-
-st.set_page_config(page_title="Web Regula Falsi Sena", layout="wide", page_icon="⚡")
+st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
 
 st.markdown(
     """
@@ -41,8 +39,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-st.markdown("<div class='title'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Fikri Zaki Avisena Present</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>⚡ Metode Regula Falsi – Root Finder App</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Aplikasi profesional untuk mencari akar persamaan non-linear</div>", unsafe_allow_html=True)
 
 
 st.write("---")
@@ -67,17 +65,17 @@ with col1:
 
 with col2:
     st.markdown("<div class='card'>", unsafe_allow_html=True)
-    st.markdown("### ℹ️ Informasi Metode")
+    st.markdown("### ℹ Informasi Metode")
     st.write(
-        "Metode *Regula Falsi* (False Position) menggunakan garis sekant untuk memperkirakan akar persamaan f(x)."
+        "Metode Regula Falsi (False Position) menggunakan garis sekant untuk memperkirakan akar persamaan f(x)."
     )
     st.write("""
-    **Kelebihan:**
+    *Kelebihan:*
     - Lebih stabil dibanding metode sekant
     - Tidak memerlukan turunan f(x)
 
 
-    **Kekurangan:**
+    *Kekurangan:*
     - Lebih lambat dibanding Newton-Raphson
     - Bisa stagnan pada beberapa kasus
     """)
@@ -176,13 +174,12 @@ with colR1:
             st.info("Tekan tombol 'Hitung Akar' untuk memulai perhitungan.")
 
     st.markdown("</div>", unsafe_allow_html=True)
+
+data = []
+
+if data:
+    df = pd.DataFrame(data, columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"])
     
-if len(data) > 0:
-    df = pd.DataFrame(
-        data, 
-        columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
-    )
-    st.dataframe(df, use_container_width=True)
     
     with colR1:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
@@ -209,6 +206,6 @@ else:
     with colR2:
         st.info("Grafik konvergensi akan muncul setelah perhitungan selesai.")
 
-st.markdown("<div class='footer'>Aplikasi Web Metode Regula Falsi</div>", unsafe_allow_html=True)
+st.markdown("<div class='footer'>Dibuat dengan ❤ menggunakan Streamlit • Regula Falsi Professional Edition</div>", unsafe_allow_html=True)
 
-# --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
+# --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
