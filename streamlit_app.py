@@ -206,6 +206,7 @@ else:
     with colR2:
         st.info("Grafik konvergensi akan muncul setelah perhitungan selesai.")
 
-st.markdown("<div class='footer'>Jangan Lupa Follow IG: aavisena_ https://www.instagram.com/aavisena_/</div>", unsafe_allow_html=True)
-
+st.write(
+   Jangan Lupa Follow IG: aavisema_ [docs.streamlit.io](https://www.instagram.com/aavisena_/)."
+)
 # --- DARK MODE & DASHBOARD VERSION BELOW WILL BE ADDED ---
