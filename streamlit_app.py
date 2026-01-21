@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplolib.pyplot as plt
 
 
 st.set_page_config(page_title="Regula Falsi Calculator", layout="wide", page_icon="⚡")
