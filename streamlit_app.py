@@ -176,8 +176,11 @@ with colR1:
     st.markdown("</div>", unsafe_allow_html=True)
     
 if data:
-    df = pd.DataFrame(data, columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"])
-    
+    df = pd.DataFrame(
+        data, 
+        columns=["Iterasi", "a", "b", "c", "f(a)", "f(b)", "f(c)"]
+    )
+    st.dataframe(df, use_container_width=True)
     
     with colR1:
         st.markdown("<div class='card'>", unsafe_allow_html=True)
